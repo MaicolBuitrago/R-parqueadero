@@ -1,54 +1,42 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import vehiculosRoutes from '../routes/vehiculosRoutes.js';
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Middleware
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://parqueadero-r.netlify.app'],
-  credentials: true
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  credentials: true  
 }));
+
 app.use(express.json());
 
-// Importar rutas 
-const vehiculosRoutes = require('../routes/vehiculosRoutes'); 
 
-// Usar rutas
 app.use('/api', vehiculosRoutes);
 
-// Ruta de prueba
-app.get('/', (req, res) => {
-    res.json({ 
-        message: 'API de Gestión de Vehículos - Render',
-        version: '1.0.0',
-        timestamp: new Date().toISOString(),
-        endpoints: {
-            vehiculos: '/api/vehiculos',
-            tipos: '/api/tipos',
-            estados: '/api/estados'
-        }
-    });
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: "OK", 
+    message: "Backend Parqueadero funcionando",
+    timestamp: new Date().toISOString(),
+    project: "R-parqueadero",
+    frontend: "https://parqueadero-r.netlify.app"
+  });
 });
 
-// Ruta de health check para Render
-app.get('/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
-        service: 'parqueadero-api',
-        timestamp: new Date().toISOString()
-    });
-});
-
-// Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
-    console.log(`🌐 URL local: http://localhost:${PORT}`);
-    console.log(`🌐 URL Render: https://r-parqueadero.onrender.com`);
-    console.log('\n📋 Endpoints disponibles:');
-    console.log(`   GET  /                    - Info de la API`);
-    console.log(`   GET  /health              - Health check`);
-    console.log(`   GET  /api/vehiculos       - Obtener todos los vehículos`);
-    console.log(`   POST /api/vehiculos       - Crear nuevo vehículo`);
-    console.log(`   PUT  /api/vehiculos/:placa/estado - Cambiar estado`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`
+==========================================
+✅ Servidor Parqueadero funcionando
+📍 Puerto: ${PORT}
+🌐 Local: http://localhost:${PORT}
+🚀 Render: https://r-parqueadero.onrender.com
+📱 Frontend: https://parqueadero-r.netlify.app
+==========================================
+  `);
 });
