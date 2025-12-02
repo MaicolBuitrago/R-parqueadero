@@ -4,7 +4,7 @@ import VehiculosTable from './components/VehiculosTable';
 import VehiculoStatus from './components/VehiculoStatus';
 import './App.css';
 
-const API_URL = 'http://localhost:4000/api';
+const API_URL = 'https://r-parqueadero.onrender.com/api';
 
 function App() {
   const [vehiculos, setVehiculos] = useState([]);
